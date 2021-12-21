@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center justify-between my-5">
         <h2 class="my-6 text-sm font-semibold text-gray-700 md:text-xl dark:text-gray-200">
-            Products {{ products.total }}
+            Products ({{ products.total }})
         </h2>
 
          <div class="flex justify-center flex-1 lg:mr-32">
