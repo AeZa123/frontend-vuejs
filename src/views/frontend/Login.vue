@@ -26,7 +26,7 @@
                
                 <label class="block mt-3 mb-2 text-sm text-gray-700" for="email">อีเมล์</label>
                 <input v-model="email" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" type="text" autocomplete="email">
-                 <div v-if="v$.email.$error" class="mt-2 text-sm text-red-500">
+                <div v-if="v$.email.$error" class="mt-2 text-sm text-red-500">
                   {{ v$.email.$errors[0].$message }}
                 </div>
 

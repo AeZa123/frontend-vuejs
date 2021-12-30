@@ -21,36 +21,57 @@
 
               <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">สมัครสมาชิกใหม่</h1>
 
-              <form>
+              <form @submit.prevent="onSubmit">
 
                 <label class="block mb-2 text-sm text-gray-700" for="fullname">ชื่อ-สกุล</label>
-                <input class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="fullname" type="text">
+                <input v-model="fname" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="fullname" type="text">
+                <div v-if="v$.fname.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.fname.$errors[0].$message }}
+                </div>
 
                 <label class="block mt-3 mb-2 text-sm text-gray-700" for="username">ชื่อผู้ใช้</label>
-                <input class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="username" type="text">
+                <input v-model="username" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="username" type="text">
+                <div v-if="v$.username.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.username.$errors[0].$message }}
+                </div>
 
                 <label class="block mt-3 mb-2 text-sm text-gray-700" for="mobile">เบอร์โทรศัพท์</label>
-                <input class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="mobile" type="text">
+                <input v-model="tel" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="mobile" type="text">
+                <div v-if="v$.tel.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.tel.$errors[0].$message }}
+                </div>
 
                 <label class="block mt-3 mb-2 text-sm text-gray-700" for="email">อีเมล์</label>
-                <input class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="email" type="text" autocomplete="email">
+                <input v-model="email" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="email" type="text" autocomplete="email">
+                <div v-if="v$.email.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.email.$errors[0].$message }}
+                </div>
 
                 <label class="block mt-3 mb-2 text-sm text-gray-700" for="password">รหัสผ่าน</label>
-                <input class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="password" type="password" autocomplete="current-password">
+                <input v-model="password" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="password" type="password" autocomplete="current-password">
+                <div v-if="v$.password.$error" class="mt-2 text-sm text-red-500">
+                  {{ v$.password.$errors[0].$message }}
+                </div>
 
                 <label class="block mt-3 mb-2 text-sm text-gray-700" for="confirm_password">ยืนยันรหัสผ่าน</label>
-                <input class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="confirm_password" type="password" autocomplete="current-password">
+                <input v-model="password_confirmation" class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none" id="confirm_password" type="password" autocomplete="current-password">
+                <div v-if="this.password != this.password_confirmation" class="mt-2 text-sm text-red-500">
+                   รหัสผ่านไม่ตรงกัน
+                </div>
+
 
                 <p class="my-4"></p>
 
                 <label class="flex items-center dark:text-gray-400">
-                  <input type="checkbox" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"/>
+                  <input v-model="checkAccept" type="checkbox" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"/>
                   <span class="ml-2">ฉันยอมรับ <span class="underline">เงื่อนไขการใช้งานระบบ</span>
                   </span>
                 </label>
+                <div v-if="checkAccept != true" class="mt-2 text-sm text-red-500">
+                  กรุณากดยอมรับเงื่อนไข
+                </div>
                 
-                <input type="button"
-                    class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg cursor-pointer active:bg-purple-600 hover:bg-purple-700" value="สมัครสมาชิก">
+                <button @click="submitForm" class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg cursor-pointer active:bg-purple-600 hover:bg-purple-700" >สมัครสมาชิก</button>
               </form>
 
               <p class="my-8"></p>
@@ -68,6 +89,7 @@
                 </svg>
                 Github
               </button>
+              
               <button
                 class="flex items-center justify-center w-full px-4 py-2 mt-4 text-sm font-medium leading-5 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
                 <svg
@@ -81,12 +103,155 @@
                 Twitter
               </button>
 
-              <p class="mt-2">
-                <router-link to="/login" class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline">ฉันเป็นสมาชิกอยู่แล้ว ? เข้าสู่ระบบ</router-link>
-              </p>
+                <p class="mt-2">
+                    <router-link to="/login" class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline">ฉันเป็นสมาชิกอยู่แล้ว ? เข้าสู่ระบบ</router-link>
+                </p>
+                
+              
             </div>
           </div>
         </div>
       </div>
     </div>
 </template>
+
+
+<script>
+
+import useValidate from '@vuelidate/core'
+import { required, email, minLength, maxLength, helpers } from '@vuelidate/validators'
+import http from '@/services/AuthService'
+
+export default {
+  data() {
+    return {
+      v$: useValidate(),
+      fname: '',
+      username: '',
+      tel: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+
+      checkAccept: false,
+    }
+  },
+
+  methods:{
+    submitForm(){
+      this.v$.$validate();
+      if(!this.v$.$error){
+        
+        if(this.password == this.password_confirmation){
+
+            if(this.checkAccept){
+                
+                let data = new FormData()
+                data.append('fullname', this.fname)
+                data.append('username', this.username)
+                data.append('tel', this.tel)
+                data.append('email', this.email)
+                data.append('password', this.password)
+                data.append('password_confirmation', this.password_confirmation)
+                data.append('role', '2')
+
+                http.post('register', data).then((response => {
+
+                    console.log(response)
+
+                    this.onResetForm()
+
+
+                    const Toast = this.$swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', this.$swal.stopTimer)
+                            toast.addEventListener('mouseleave', this.$swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'สมัครสมาชิกสำเร็จ'
+                    })
+
+                    this.$router.push({name: 'Dashboard'})
+                    
+                    }
+                ))
+            }
+            
+        }
+        
+
+
+      }
+    },
+
+    onResetForm(){
+        this.fname = ''
+        this.username = ''
+        this.tel = ''
+        this.email = ''
+        this.password = ''
+        this.password_confirmation = ''
+    }
+    
+
+    
+  },
+
+
+
+  validations(){
+    return{
+      fname: { 
+        required: helpers.withMessage('กรุณาใส่ชื่อ-นามสกุล', required),
+      },
+
+      username: { 
+        required: helpers.withMessage('กรุณาใส่ชื่อผู้ใช้', required),
+      },
+
+      tel: { 
+        required: helpers.withMessage('กรุณาใส่เบอร์โทร', required),
+        minLength: helpers.withMessage(
+            ({
+                $params
+            }) => `เบอร์โทรต้องมี ${$params.min} หลัก`,
+            minLength(10)
+        ),
+        maxLength: helpers.withMessage(
+            ({
+                $params
+            }) => `เบอร์โทรต้องไม่เกิน ${$params.max} หลัก`,
+            maxLength(10)
+        )
+      },
+
+      email: { 
+        required: helpers.withMessage('กรุณาใส่อีเมล', required),
+        email: helpers.withMessage('รูปแบบอีเมลไม่ถูกต้อง', email)
+      },
+
+       password: { 
+        required: helpers.withMessage('ป้อนรหัสผ่านก่อน', required), 
+        minLength : helpers.withMessage(
+          ({
+            $params
+          }) => `รหัสผ่านต้องไม่น้อยกว่า ${$params.min} ตัวอักษร`, 
+          minLength(6)
+        )
+      }
+
+      
+
+    }
+  }
+}
+
+</script>

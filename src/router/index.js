@@ -20,6 +20,7 @@ import NotFound404 from '@/views/frontend/NotFound404.vue'
 import Dashbaord from '@/views/backend/Dashboard.vue'
 import Products from '@/views/backend/Products.vue'
 import Users from '@/views/backend/Users.vue'
+import Profile from '@/views/backend/Profile.vue'
 
 
 //ตัวแปรเซ็คล็อกอิน
@@ -258,7 +259,33 @@ const routes = [
     meta: {
       title: 'Users'
     }
-  }
+  },
+
+
+
+  {
+    path: '/backend/profile',
+    component: BackendLayout,
+    children: [
+      {
+        path: '',
+        name: 'Profile',
+        component: Profile,
+        beforeEnter: authGuard
+        // beforeEnter (to, from, next) {
+        //   // ...
+        //   if(state){
+        //     next()
+        //   }else{
+        //     next({name:'Login'})
+        //   }
+        // }
+      }
+    ],
+    meta: {
+      title: 'Profile'
+    }
+  },
 
 
 
